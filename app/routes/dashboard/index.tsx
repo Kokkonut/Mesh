@@ -6,12 +6,10 @@ import { useSetUserData } from "~/context/UserDataContext";
 import type { LoaderFunction } from "@remix-run/node";
 
 export let loader: LoaderFunction = async ({ request }) => {
-  const cookie = request.headers.get("cookie");
-
-
+ 
   const response = await fetch("http://localhost:3000/api/user/data", {
     headers: {
-      cookie: cookie, // Pass the cookies along with the request
+      cookie: request.headers.get("cookie") || "",
     },
   });
 

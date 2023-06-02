@@ -2,7 +2,7 @@ const User = require("../models/User");
 
 // @desc    Get all users
 exports.getUserData = async (req, res) => {
-  
+  console.log("SERVER: getUserData Called....");
   try {
     const user = await User.findById(req.user.id).populate("organizations.org");
     if (!user) {

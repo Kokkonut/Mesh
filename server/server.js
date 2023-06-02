@@ -5,6 +5,7 @@ const { installGlobals } = require("@remix-run/node");
 const compression = require("compression");
 const express = require("express");
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 const db = require("./config/connection");
 const passport = require("passport");
 const apiRoutes = require("./routes");
@@ -14,11 +15,18 @@ const BUILD_DIR = path.join(process.cwd(), "build");
 
 const app = express();
 app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(passport.initialize());
 app.use(compression());
 
 // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
 app.disable("x-powered-by");
+
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+  next();
+});
 
 app.use('/api', apiRoutes);
 

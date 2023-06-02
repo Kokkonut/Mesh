@@ -13,4 +13,16 @@ module.exports = {
     v2_normalizeFormMethod: true,
     v2_routeConvention: true,
   },
+  devServer: {
+    webSocketServer: {
+      options: {
+        port: 8003,
+      },
+    },
+    liveReloadServer: {
+      options: {
+        port: 8004,
+      },
+    },
+  },
 };

@@ -6,8 +6,12 @@ const Invite = require("../models/Invite");
 
 //login
 exports.loginUser = async (req, res) => {
+  console.log("SERVER: loginUser Called....");
+  console.log("SERVER: loginUser req.body: ", req.body);
   try {
     const { email, password } = req.body;
+    console.log("SERVER: loginUser email: ", email);
+    console.log("SERVER: loginUser password: ", password);
 
     const user = await User.findOne({ email });
 
