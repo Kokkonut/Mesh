@@ -8,10 +8,19 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import stylesheet from "~/index.css";
+import satoshi from "~/satoshi.css";
 
-export const links: LinksFunction = () => [
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
-];
+// export const links: LinksFunction = () => [
+//   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+// ];
+
+export function links() {
+  return [
+    { rel: "stylesheet", href: stylesheet },
+    { rel: "stylesheet", href: satoshi },
+  ];
+}
 
 export default function App() {
   return (
