@@ -5,17 +5,22 @@ const { installGlobals } = require("@remix-run/node");
 const compression = require("compression");
 const express = require("express");
 const morgan = require("morgan");
-
+const db = require("./config/connection");
+const passport = require("passport");
+const apiRoutes = require("./routes");
 installGlobals();
 
 const BUILD_DIR = path.join(process.cwd(), "build");
 
 const app = express();
-
+app.use(express.json());
+app.use(passport.initialize());
 app.use(compression());
 
 // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
 app.disable("x-powered-by");
+
+app.use('/api', apiRoutes);
 
 // Remix fingerprints its assets so we can cache forever.
 app.use(
@@ -47,9 +52,15 @@ app.all(
 );
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`Express server listening on port ${port}`);
+db.once("open", () => {
+  app.listen(port, () => {
+    console.log(`API server running on port ${port}!`);
+  });
 });
+
+// app.listen(port, () => {
+//   console.log(`Express server listening on port ${port}`);
+// });
 
 function purgeRequireCache() {
   // purge require cache on requests for "server side HMR" this won't let
