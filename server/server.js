@@ -9,6 +9,8 @@ const cookieParser = require("cookie-parser");
 const db = require("./config/connection");
 const passport = require("passport");
 const apiRoutes = require("./routes");
+const session = require("express-session");  // <--- Require express-session
+
 installGlobals();
 
 const BUILD_DIR = path.join(process.cwd(), "build");
@@ -17,6 +19,17 @@ const app = express();
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Use session middleware
+// Configure the session to use a secret, not save uninitialized sessions and not to force sessions to be saved
+// if they haven't been modified.
+// app.use(session({
+//   secret: 'your secret value',
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie: { secure: false } // Note: a secure cookie requires HTTPS
+// }));
+
 app.use(passport.initialize());
 app.use(compression());
 
@@ -66,16 +79,7 @@ db.once("open", () => {
   });
 });
 
-// app.listen(port, () => {
-//   console.log(`Express server listening on port ${port}`);
-// });
-
 function purgeRequireCache() {
-  // purge require cache on requests for "server side HMR" this won't let
-  // you have in-memory objects between requests in development,
-  // alternatively you can set up nodemon/pm2-dev to restart the server on
-  // file changes, but then you'll have to reconnect to databases/etc on each
-  // change. We prefer the DX of this, so we've included it for you by default
   for (const key in require.cache) {
     if (key.startsWith(BUILD_DIR)) {
       delete require.cache[key];

@@ -1,115 +1,112 @@
-import { Link } from "@remix-run/react";
-import { useState } from "react";
-import type { V2_MetaFunction } from "@remix-run/node";
+import { Form, Link } from "@remix-run/react";
+import type { ActionFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { formDataToObject } from "~/helpers/utilities";
+import validator from "validator";
+import DashboardLayout from "~/layouts/Dashboardlayout";
 
-import "tailwindcss/tailwind.css";
+export const action: ActionFunction = async ({ request }) => {
+  let forData = await request.formData();
+  let data = formDataToObject(forData);
 
-export const meta: V2_MetaFunction = () => {
-  return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
-  ];
-};
+  // let errors = validateForm(data as any);
 
-export default function Signup() {
-  const [formData, setFormData] = useState({
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
+  let response = await fetch("http://localhost:3000/api/auth/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      cookie: request.headers.get("cookie") || "",
+    },
+    body: JSON.stringify(data),
   });
 
-  function handleChange(e: { target: { name: any; value: any; }; }) {
-      setFormData({
-          ...formData,
-          [e.target.name]: e.target.value,
-      });
+  if (response.ok) {
+    return redirect(`/dashboard`);
+  } else {
+    // Handle any errors
+    return new Response(null, { status: 500 });
   }
+};
 
-  async function handleSubmit(e: { preventDefault: () => void; }) {
-      e.preventDefault();
-      const res = await fetch("/api/auth/signup", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-              "accept": "application/json",
-          },
-          body: JSON.stringify(formData),
-      });
-      if (res.ok) {
-          window.location.href = "/dashboard";
-      }
-
-  }
-
+function Signup() {
   return (
-    <div className="min-h-screen bg-slate-700 flex items-center justify-center flex-col">
-      <header className="text-6xl font-bold text-white fixed top-0">TaskMaster</header>
-      <form className="bg-white p-8 rounded-lg shadow-md w-full md:w-1/2 lg:w-1/3" onSubmit={handleSubmit}>
-        <h1 className="text-2xl mb-6 text-center">Signup</h1>
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-sm mb-2">
-            First Name
-          </label>
-          <input
-            type="text"
-            id="first-name"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-          />
+    <DashboardLayout>
+      <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
+          <h3 className="font-medium text-black dark:text-white">
+            Sign Up Form
+          </h3>
         </div>
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-sm mb-2">
-            Last Name
-          </label>
-          <input
-            type="text"
-            id="last-name"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-          />
-        </div>
+        <Form method="post" noValidate>
+          <div className="p-6.5">
+            <div className="mb-4.5">
+              <label className="mb-2.5 block text-black dark:text-white">
+                First Name
+              </label>
+              <input
+                type="text"
+                name="firstName"
+                placeholder="Enter your full name"
+                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              />
+            </div>
 
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm mb-2">
-            Email Address
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-          />
-        </div>
-        <div className="mb-6">
-          <label htmlFor="password" className="block text-sm mb-2">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-          />
-        </div>
-        <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg">
-          Signup
-        </button>
-        <p className="text-sm text-center mt-4">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 underline">
-            Login
-          </Link>
-        </p>
-      </form>
-    </div>
+            <div className="mb-4.5">
+              <label className="mb-2.5 block text-black dark:text-white">
+                Last Name
+              </label>
+              <input
+                type="text"
+                name="lastName"
+                placeholder="Enter your full name"
+                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              />
+            </div>
+
+            <div className="mb-4.5">
+              <label className="mb-2.5 block text-black dark:text-white">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email address"
+                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              />
+            </div>
+
+            <div className="mb-4.5">
+              <label className="mb-2.5 block text-black dark:text-white">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter password"
+                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              />
+            </div>
+
+            <div className="mb-5.5">
+              <label className="mb-2.5 block text-black dark:text-white">
+                Re-type Password
+              </label>
+              <input
+                type="password"
+                name="password-confirm"
+                placeholder="Re-enter password"
+                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+              />
+            </div>
+
+            <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray">
+              Sign Up
+            </button>
+          </div>
+        </Form>
+      </div>
+    </DashboardLayout>
   );
 }
+
+export default Signup;

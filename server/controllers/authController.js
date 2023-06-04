@@ -35,6 +35,7 @@ exports.loginUser = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: isProduction,
+      path: "/",
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: isProduction ? "none" : undefined,
     });
@@ -48,6 +49,7 @@ exports.loginUser = async (req, res) => {
 
 //signup
 exports.signup = async (req, res) => {
+  console.log("SERVER: signup Called....");
   try {
     const { firstName, lastName, email, password } = req.body;
 

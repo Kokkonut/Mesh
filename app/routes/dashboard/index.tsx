@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Outlet } from "@remix-run/react";
 import DashboardLayout from "~/layouts/Dashboardlayout";
 import { Link, useLoaderData } from "@remix-run/react";
 import OrganizationCard from "~/components/OrganizationCard";
@@ -6,10 +7,12 @@ import { useSetUserData } from "~/context/UserDataContext";
 import type { LoaderFunction } from "@remix-run/node";
 
 export let loader: LoaderFunction = async ({ request }) => {
- 
+  const cookie = request.headers.get("cookie");
+
+
   const response = await fetch("http://localhost:3000/api/user/data", {
     headers: {
-      cookie: request.headers.get("cookie") || "",
+      cookie: cookie, // Pass the cookies along with the request
     },
   });
 
@@ -37,7 +40,7 @@ const Dashboard: React.FC = () => {
       {organizations && organizations.length === 0 ? (
         <div>
           <h2>
-            Welcome! Please <Link to="#">create</Link> or join an organization.
+            Welcome! Please <Link to="../dashboard/test">create</Link> or join an organization.
           </h2>
         </div>
       ) : (
@@ -56,8 +59,11 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       )}
+      <Outlet />
     </DashboardLayout>
   );
 };
 
 export default Dashboard;
+
+

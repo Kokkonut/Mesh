@@ -1,9 +1,10 @@
 import { ReactNode, useState } from "react";
 import { Link } from "@remix-run/react";
-import JoinOrg from "~/routes/dashboard/join-org";
-import CreateOrg from "~/routes/dashboard/create-org";
+import JoinOrg from "~/routes/dashboard/joinOrg";
+import CreateOrg from "~/routes/dashboard/createOrg";
 import Sidebar from "~/components/Sidebar";
 import Header from "~/components/Header";
+import { Outlet } from "@remix-run/react"
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -30,6 +31,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <main>
           <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
             {children}
+            <Outlet />
           </div>
         </main>
         {/* <!-- ===== Main Content End ===== --> */}
