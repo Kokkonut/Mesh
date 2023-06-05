@@ -86,6 +86,7 @@ exports.updateProject = async (req, res) => {
 
 //get users not assigned to a project
 exports.availableUsers = async (req, res) => {
+  console.log("availableUsers");
  
   const { orgId, projectId } = req.params;
 

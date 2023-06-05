@@ -13,11 +13,11 @@ const taskSchema = new Schema({
         required: false,
         trim: true,
     },
-    project: {
+    project: [{
         type: Schema.Types.ObjectId,
         ref: 'Project',
         required: true,
-    }
+    }]
 });
 
 const Task = mongoose.models.Task || mongoose.model('Task', taskSchema);

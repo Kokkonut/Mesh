@@ -5,13 +5,18 @@ const Task = require("../models/Task");
 
 // Create a new task
 exports.createTask = async (req, res) => {
+    console.log('SERVER createTask called');
 
     const { orgId, projectId } = req.params;
+    console.log('SERVER CREATE TASK orgId: ', orgId);
+    console.log('SERVER CREATE TASK projectId: ', projectId);
 
     try {
         const org = await Organization.findById(orgId);
+        console.log('SERVER CREATE TASK org: ', org);
 
         const project = await Project.findById(projectId);
+        console.log('SERVER CREATE TASK project: ', project);
       
 
         if (!org || !project) {
@@ -34,4 +39,110 @@ exports.createTask = async (req, res) => {
     }
 };
 
-  
+// Get all tasks for a organization, filtering out the tasks in the specified project
+exports.getAllTasks = async (req, res) => {
+
+    const { projectId } = req.params;
+    
+    // check if projectId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+        return res.status(400).json({ message: 'Invalid project id.' });
+    }
+
+    try {
+        // Get the project
+        const project = await Project.findById(projectId);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found.' });
+        }
+
+        // Convert task ObjectIds in the project to strings for easier comparison
+        const projectTasksIds = project.tasks.map(task => task.toString());
+
+        // Get all tasks that are not in the project
+        const tasks = await Task.find({ _id: { $nin: projectTasksIds } });
+
+
+        res.status(200).json(tasks);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+
+
+//Get all tasks for a project
+
+exports.getProjectTasks = async (req, res) => {
+    console.log('Get Project Tasks called') ;
+    const { orgId, projectId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(orgId) || !mongoose.Types.ObjectId.isValid(projectId)) {
+        return res.status(400).json({ message: 'Invalid organization or project id.' });
+    }
+
+    try {
+        // Verify the organization exists
+        const organization = await Organization.findById(orgId);
+        if (!organization) {
+            return res.status(404).json({ message: 'Organization not found.' });
+        }
+
+        // Verify the project exists within the organization
+        const project = await Project.findOne({ _id: projectId, org: orgId });
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found in the specified organization.' });
+        }
+
+        // Get all tasks in the project
+        const tasks = await Task.find({ project: projectId });
+
+        res.status(200).json(tasks);
+        
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+// Remove a task from a project
+exports.removeTask = async (req, res) => {
+    const { projectId, taskId } = req.params;
+
+    console.log('Project Id: ', projectId);
+    console.log('Task Id: ', taskId);
+
+    // check if projectId and taskId are valid ObjectIds
+    if (!mongoose.Types.ObjectId.isValid(projectId) || !mongoose.Types.ObjectId.isValid(taskId)) {
+        return res.status(400).json({ message: 'Invalid project or task id.' });
+    }
+
+    try {
+        const project = await Project.findById(projectId);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found.' });
+        }
+
+        console.log('Original Project Tasks: ', project.tasks);
+
+        // Remove task from project's tasks array by converting ObjectId to string
+        project.tasks = project.tasks.filter(task => task.toString() !== taskId.toString());
+
+        console.log('Filtered Project Tasks: ', project.tasks);
+
+        await project.save();
+
+        // Find the task
+        const task = await Task.findById(taskId);
+        if (task) {
+            // Filter out the project ID
+            task.project = task.project.filter(projectIdInTask => projectIdInTask.toString() !== projectId.toString());
+
+            await task.save();
+        }
+
+        res.status(200).json({ message: 'Task removed from the project.' });
+    } catch (error) {
+        console.log('Error:', error);
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
