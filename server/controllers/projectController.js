@@ -44,10 +44,12 @@ exports.createProject = async (req, res) => {
 
 // Get all projects for an organization
 exports.getProjects = async (req, res) => {
+  console.log("getProjects");
 
   try {
   
     const { orgId } = req.params;
+    console.log("orgId", orgId);
 
     const projects = await Project.find({ org: orgId });
 

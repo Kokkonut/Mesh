@@ -30,6 +30,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     case 'dashboard':
       Menu = DashboardSubMenu;
       break;
+      case 'org':
+        if (pathSegments[1] === 'org') {
+          Menu = OrgDashboardSubMenu;
+        }
+        break;
     case 'auth':
     case 'organization-dashboard':
       if (pathSegments[3] === 'projects') {
@@ -39,6 +44,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       }
       break;
     default:
+      // Menu = ProjectSubMenu 
       Menu = () => null;
   }
   
