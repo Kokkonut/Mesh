@@ -9,6 +9,7 @@ interface LoaderContext {
 }
 //get projects for org
 export async function loader({ request, params }: LoaderContext) {
+  console.log('params', params.orgId);
   const response = await fetch(
     `http://localhost:3000/api/project/${params.orgId}`,
     {

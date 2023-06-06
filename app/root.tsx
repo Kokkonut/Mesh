@@ -1,5 +1,5 @@
 // import { cssBundleHref } from "@remix-run/css-bundle";
-// import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -16,12 +16,18 @@ import { UserDataProvider } from "~/context/UserDataContext";
 //   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 // ];
 
-export function links() {
-  return [
-    { rel: "stylesheet", href: stylesheet },
-    { rel: "stylesheet", href: satoshi },
-  ];
-}
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: stylesheet },
+  { rel: "stylesheet", href: satoshi },
+];
+
+
+// export function links() {
+//   return [
+//     { rel: "stylesheet", href: stylesheet },
+//     { rel: "stylesheet", href: satoshi },
+//   ];
+// }
 
 export default function App() {
   return (
@@ -37,7 +43,7 @@ export default function App() {
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload port={8002}/>
+        <LiveReload />
       </body>
     </html>
     </UserDataProvider>

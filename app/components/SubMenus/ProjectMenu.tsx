@@ -41,7 +41,7 @@ const ProjectMenu = ({ sidebarOpen, setSideBarOpen }: SidebarProps) => {
                 {/* REPORTS */}
                 <li>
                 <NavLink
-                  to="/calendar"
+                  to="#"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes('calendar') &&
                     'bg-graydark dark:bg-meta-4'
@@ -66,7 +66,7 @@ const ProjectMenu = ({ sidebarOpen, setSideBarOpen }: SidebarProps) => {
                                 {/* TEAM PLANNER */}
                                 <li>
                 <NavLink
-               to={`../organization-dashboard/${orgId}/projects/${projectId}/teamPlanner`}
+               to={`../organization-dashboard/${orgId}/${projectId}/teamPlanner`}
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes('teamPlanner') &&
                     'bg-graydark dark:bg-meta-4'
@@ -91,7 +91,7 @@ const ProjectMenu = ({ sidebarOpen, setSideBarOpen }: SidebarProps) => {
                                 {/* Task Manager */}
                                 <li>
                 <NavLink
-                  to={`../organization-dashboard/${orgId}/projects/${projectId}/taskManager`}
+                  to={`../tasks/${orgId}/${projectId}/taskManager/AddTask/getAll/tasks`}
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes('taskManager') &&
                     'bg-graydark dark:bg-meta-4'

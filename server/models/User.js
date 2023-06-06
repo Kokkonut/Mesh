@@ -36,6 +36,12 @@ const userSchema = new Schema({
         enum: ["owner", "supervisor", "employee"],
         default: "employee",
       },
+      fte: {
+        type: Number,
+      },
+      title: {
+        type: String,
+      },
     },
   ],
 });

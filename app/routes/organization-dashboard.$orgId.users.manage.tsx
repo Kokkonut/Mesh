@@ -21,6 +21,7 @@ export async function loader({ request, params }: LoaderContext) {
     }
   );
   const data = await response.json();
+  console.log('data from get all employees', data);
   return data;
 }
 

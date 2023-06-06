@@ -1,7 +1,13 @@
 import React from "react";
-import { useParams } from "@remix-run/react";
+import { useParams, Link } from "@remix-run/react";
 
-const OrgUsers = ({ users, owner, supervisors }) => {
+interface OrgUsersProps {
+  users: any;
+  owner: any;
+  supervisors: any;
+}
+
+const OrgUsers = ({ users, owner, supervisors }: OrgUsersProps) => {
   const { orgId } = useParams();
 
   // This function will be called when the "Remove" button is clicked
@@ -53,121 +59,84 @@ const OrgUsers = ({ users, owner, supervisors }) => {
           </div>
         </div>
         {/* OWNER */}
-        {owner && (
-          <div className="grid grid-cols-6 border-b border-stroke dark:border-strokedark bg-white dark:bg-boxdark">
-            <div className="flex items-center gap-3 p-2.5 xl:p-5">
-              <p className="text-black dark:text-white">
-                {owner.firstName} {owner.lastName}
-              </p>
-            </div>
-            <div className="flex items-center justify-center p-2.5 xl:p-5">
-              <p className="text-black dark:text-white">{owner.email}</p>
-            </div>
-            <div className="flex items-center justify-center p-2.5 xl:p-5  text-black dark:text-white">
-              <p>Owner</p>
-            </div>
-            <div className="items-center justify-center p-2.5 xl:p-5"></div>
-          </div>
-        )}
+        {owner && (() => {
+            let userId = owner._id;
+            return (
+              <div className="grid grid-cols-6 border-b border-stroke dark:border-strokedark bg-white dark:bg-boxdark">
+                <div className="flex items-center gap-3 p-2.5 xl:p-5">
+                  <Link to={`/organization-dashboard/${orgId}/users/${userId}`}>
+                    <p className="text-black dark:text-white">
+                      {owner.firstName} {owner.lastName}
+                    </p>
+                  </Link>
+                </div>
+                <div className="flex items-center justify-center p-2.5 xl:p-5">
+                  <p className="text-black dark:text-white">{owner.email}</p>
+                </div>
+                <div className="flex items-center justify-center p-2.5 xl:p-5  text-black dark:text-white">
+                  <p>Owner</p>
+                </div>
+                <div className="items-center justify-center p-2.5 xl:p-5"></div>
+              </div>
+            );
+          })()}
 
         {/* SUPERVISORS */}
         {Array.isArray(supervisors) &&
-          supervisors.map((supervisors, index) => (
-            <div
-              className="grid grid-cols-6 border-b border-stroke dark:border-strokedark bg-white dark:bg-boxdark"
-              key={index}
-            >
-              <div className="flex items-center gap-3 p-2.5 xl:p-5">
-                <p className="text-black dark:text-white">
-                  {supervisors.firstName} {supervisors.lastName}
-                </p>
-              </div>
-              <div className="flex items-center justify-center p-2.5 xl:p-5">
-                <p className="text-black dark:text-white">
-                  {supervisors.email}
-                </p>
-              </div>
-              <div className="flex items-center justify-center p-2.5 xl:p-5  text-black dark:text-white">
-                <select className="form-select  bg-white dark:bg-boxdark">
-                  <option
-                    value="supervisor"
-                    selected={supervisors.role === "supervisor"}
+          supervisors.map((supervisor, index) => {
+            let userId = supervisor._id;
+            return (
+              <div className="grid grid-cols-6 border-b border-stroke dark:border-strokedark bg-white dark:bg-boxdark" key={index}>
+                <div className="flex items-center gap-3 p-2.5 xl:p-5">
+                  <Link to={`/organization-dashboard/${orgId}/users/${userId}`}>
+                    <p className="text-black dark:text-white">
+                      {supervisor.firstName} {supervisor.lastName}
+                    </p>
+                  </Link>
+                </div>
+                <div className="flex items-center justify-center p-2.5 xl:p-5">
+                  <p className="text-black dark:text-white">{supervisor.email}</p>
+                </div>
+                <div className="flex items-center justify-center p-2.5 xl:p-5  text-black dark:text-white">
+                  <select className="form-select  bg-white dark:bg-boxdark">
+                    <option
+                      value="supervisor"
+                      selected={supervisor.role === "supervisor"}
+                    >
+                      Supervisor
+                    </option>
+                    <option
+                      value="employee"
+                      selected={supervisor.role === "employee"}
+                    >
+                      Employee
+                    </option>
+                  </select>
+                </div>
+                <div className="items-center justify-center p-2.5 xl:p-5">
+                  <button
+                    className="inline-flex items-center justify-center rounded-md border border-meta-7 py-2 px-6 text-center font-medium text-meta-7 hover:bg-opacity-90 lg:px-8 xl:px-10"
+                    onClick={() => handleRemoveUser(supervisor._id)}
                   >
-                    Supervisor
-                  </option>
-                  <option
-                    value="employee"
-                    selected={supervisors.role === "employee"}
-                  >
-                    Employee
-                  </option>
-                </select>
+                    Remove
+                  </button>
+                </div>
               </div>
-              <div className="items-center justify-center p-2.5 xl:p-5">
-                <button
-                  className="inline-flex items-center justify-center rounded-md border border-meta-7 py-2 px-6 text-center font-medium text-meta-7 hover:bg-opacity-90 lg:px-8 xl:px-10"
-                  onClick={() => handleRemoveUser(supervisors._id)}
-                >
-                  Remove
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
 
         {/* EMPLOYEES */}
-        {Array.isArray(supervisors) &&
-          users.map(
-            (
-              user: {
-                firstName:
-                  | string
-                  | number
-                  | boolean
-                  | React.ReactElement<
-                      any,
-                      string | React.JSXElementConstructor<any>
-                    >
-                  | React.ReactFragment
-                  | React.ReactPortal
-                  | null
-                  | undefined;
-                lastName:
-                  | string
-                  | number
-                  | boolean
-                  | React.ReactElement<
-                      any,
-                      string | React.JSXElementConstructor<any>
-                    >
-                  | React.ReactFragment
-                  | React.ReactPortal
-                  | null
-                  | undefined;
-                email:
-                  | string
-                  | number
-                  | boolean
-                  | React.ReactElement<
-                      any,
-                      string | React.JSXElementConstructor<any>
-                    >
-                  | React.ReactFragment
-                  | React.ReactPortal
-                  | null
-                  | undefined;
-                role: string;
-                _id: any;
-              },
-              index: React.Key | null | undefined
-            ) => (
-              <div
-                className="grid grid-cols-6 border-b border-stroke dark:border-strokedark bg-white dark:bg-boxdark"
-                key={index}
-              >
+        {Array.isArray(users) &&
+          users.map((user, index) => {
+            let userId = user._id;
+            return (
+              <div className="grid grid-cols-6 border-b border-stroke dark:border-strokedark bg-white dark:bg-boxdark" key={index}>
                 <div className="flex items-center gap-3 p-2.5 xl:p-5">
-                  <p className="text-black dark:text-white">
-                    {user.firstName} {user.lastName}
-                  </p>
+                  <Link to={`/organization-dashboard/${orgId}/users/${userId}`}>
+                    <p className="text-black dark:text-white">
+                      {user.firstName} {user.lastName}
+                    </p>
+                  </Link>
                 </div>
                 <div className="flex items-center justify-center p-2.5 xl:p-5">
                   <p className="text-black dark:text-white">{user.email}</p>
@@ -197,8 +166,8 @@ const OrgUsers = ({ users, owner, supervisors }) => {
                   </button>
                 </div>
               </div>
-            )
-          )}
+            );
+          })}
       </div>
     </>
   );

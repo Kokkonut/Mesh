@@ -44,10 +44,12 @@ exports.createProject = async (req, res) => {
 
 // Get all projects for an organization
 exports.getProjects = async (req, res) => {
+  console.log("getProjects");
 
   try {
   
     const { orgId } = req.params;
+    console.log("orgId", orgId);
 
     const projects = await Project.find({ org: orgId });
 
@@ -84,6 +86,7 @@ exports.updateProject = async (req, res) => {
 
 //get users not assigned to a project
 exports.availableUsers = async (req, res) => {
+  console.log("availableUsers");
  
   const { orgId, projectId } = req.params;
 

@@ -61,7 +61,7 @@ const OrgProjects: React.FC<OrgProjectsProps> = ({ projects }) => {
             >
          
               <div className="flex items-center gap-3 p-2.5 xl:p-5">
-              <Link to={`/organization-dashboard/${orgId}/projects/${project._id}/details`}>
+              <Link to={`/organization-dashboard/${orgId}/projects/${project._id}`}>
                 <p className="text-black dark:text-white">{project.name}</p>
                 </Link>
               </div>

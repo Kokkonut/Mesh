@@ -19,6 +19,7 @@ const ProjectUserManagement = () => {
         `/api/project/${orgId}/${projectId}/availableUsers`
       );
       const data = await res.json();
+      console.log("XXXXXSget available users data", data);
       setAvailableUsers(data);
       setloading(false);
     };
