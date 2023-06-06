@@ -26,6 +26,7 @@ export async function loader({ request, params }: LoaderContext) {
   );
 
   const tasks: Task[] = await response.json();
+  console.log("tasks", tasks);
   return json({ tasks, projectId: params.projectId });
 }
 

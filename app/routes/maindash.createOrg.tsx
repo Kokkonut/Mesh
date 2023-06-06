@@ -38,7 +38,6 @@ function CreateOrg() {
   return (
 <DashboardLayout>
       <Breadcrumb pageName="Create Organization" />
-      <h2 className="text-2xl font-bold mb-4">Create Organization</h2>
       <form onSubmit={handleFormSubmit} className="space-y-4">
         <div className="flex flex-col">
           <label htmlFor="name" className="font-medium">

@@ -5,7 +5,6 @@ const Task = require("../models/Task");
 
 // Create a new task
 exports.createTask = async (req, res) => {
-    console.log('SERVER createTask called');
 
     const { orgId, projectId } = req.params;
     console.log('SERVER CREATE TASK orgId: ', orgId);
@@ -146,3 +145,66 @@ exports.removeTask = async (req, res) => {
         res.status(500).json({ message: 'Server error', error });
     }
 };
+
+// Add a single task to a project
+exports.addTask = async (req, res) => {
+    console.log('Add Task called');
+    const { orgId, projectId, taskId } = req.params;
+  
+    try {
+      const project = await Project.findById(projectId);
+  
+      if (!project) {
+        return res.status(404).json({ message: 'Project not found' });
+      }
+  
+      // Check if the task is already in the project
+      if (project.tasks.includes(taskId)) {
+        return res.status(400).json({ message: 'Task already in the project' });
+      }
+  
+      // Add the task to the project and save
+      project.tasks.push(taskId);
+      await project.save();
+  
+      // Update the task with the project reference
+      const task = await Task.findById(taskId);
+      if(!task) {
+        return res.status(404).json({ message: 'Task not found' });
+      }
+      task.project.push(projectId);
+      await task.save();
+  
+      res.status(200).json({ message: 'Task added to the project successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+  
+  // Add all tasks to a project
+  exports.addAllTasks = async (req, res) => {
+    const { orgId, projectId } = req.params;
+  
+    try {
+      const project = await Project.findById(projectId);
+  
+      if (!project) {
+        return res.status(404).json({ message: 'Project not found' });
+      }
+  
+      // Get all tasks for the organization
+      const tasks = await Task.find({ 'project.org': orgId });
+  
+      // Filter out tasks that are already in the project
+      const newTasks = tasks.filter((task) => !project.tasks.includes(task._id));
+  
+      // Add the new tasks to the project and save
+      project.tasks.push(...newTasks.map((task) => task._id));
+      await project.save();
+  
+      res.status(200).json({ message: 'All tasks added to the project successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error });
+    }
+  };
