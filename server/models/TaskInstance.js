@@ -22,14 +22,18 @@ const taskInstanceSchema = new Schema({
         type: Number, 
         required: true,
     },
-    startTime: {
+    weekOf: {
         type: Date,
-        required: false,
+        required: true,
     },
-    endTime: {
-        type: Date,
-        required: false,
-    },
+    // startTime: {
+    //     type: Date,
+    //     required: false,
+    // },
+    // endTime: {
+    //     type: Date,
+    //     required: false,
+    // },
     notes: {
         type: String,
         trim: false,
