@@ -102,7 +102,7 @@ const UserDetail = () => {
                       name="title"
                       id="title"
                       placeholder="Please add title"
-                      defaultValue={user.organizations?.title || ""}
+                      defaultValue={user.organization?.title || ""}
 
                     />
                   </div>
@@ -141,7 +141,7 @@ const UserDetail = () => {
                       name="fte"
                       id="fte"
                       placeholder="Please add hours per week"
-                      defaultValue={user.organizations?.fte || ""}
+                      defaultValue={user.organization?.fte || ""}
                     />
                   </div>
                 </div>
