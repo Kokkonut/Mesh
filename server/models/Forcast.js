@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema, model } = mongoose;
 
-const forecastSchema = new Schema({
+const forcastSchema = new Schema({
     task: {
         type: Schema.Types.ObjectId,
         ref: 'Task',
@@ -30,6 +30,6 @@ const forecastSchema = new Schema({
 
 
 
-const Forcast = mongoose.models.Forcast || mongoose.model('Forcast', forecastSchema);
+const Forcast = mongoose.models.Forcast || mongoose.model('Forcast', forcastSchema);
 
 module.exports = Forcast;

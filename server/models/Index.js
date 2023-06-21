@@ -4,6 +4,7 @@ const Organization = require('./Organization');
 const Invite = require('./Invite');
 const Task = require('./Task');
 const TaskInstance = require('./TaskInstance');
+const Forcast = require('./Forcast');
 
 module.exports = { 
     User, 
@@ -11,5 +12,6 @@ module.exports = {
     Organization, 
     Invite,
     Task,
-    TaskInstance
+    TaskInstance,
+    Forcast
 };

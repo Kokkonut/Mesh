@@ -75,7 +75,7 @@ const ProjectUserManagement = () => {
 
   return (
     <DashboardLayout>
-      <Breadcrumb pageName="Manage Users" />
+      <Breadcrumb pageName="Team Planner" />
       <div>
         <AvailableUsers
           users={availableUsers}

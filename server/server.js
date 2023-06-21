@@ -23,12 +23,12 @@ app.use(cookieParser());
 // Use session middleware
 // Configure the session to use a secret, not save uninitialized sessions and not to force sessions to be saved
 // if they haven't been modified.
-// app.use(session({
-//   secret: 'your secret value',
-//   resave: false,
-//   saveUninitialized: false,
-//   cookie: { secure: false } // Note: a secure cookie requires HTTPS
-// }));
+app.use(session({
+  secret: 'your secret value',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false } // Note: a secure cookie requires HTTPS
+}));
 
 app.use(passport.initialize());
 app.use(compression());
