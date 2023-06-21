@@ -6,13 +6,9 @@ const Invite = require("../models/Invite");
 
 //login
 exports.loginUser = async (req, res) => {
-  console.log("SERVER: loginUser Called....");
-  console.log("SERVER: loginUser req.body: ", req.body);
   try {
     const { email, password } = req.body;
-    console.log("SERVER: loginUser email: ", email);
-    console.log("SERVER: loginUser password: ", password);
-
+    
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -39,6 +35,9 @@ exports.loginUser = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: isProduction ? "none" : undefined,
     });
+
+    // Set the user ID to a session variable
+    req.session.userId = user.id;
 
     res.status(200).json({ message: "Login successful" });
     // res.json({ token });

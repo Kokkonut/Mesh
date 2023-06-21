@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type OrganizationsProjects {
+  id      String @map("_id") @db.ObjectId
+  project String @db.ObjectId
+  role    String
+}
+
+type UsersOrganizations {
+  id    String  @map("_id") @db.ObjectId
+  fte   Int?
+  org   String  @db.ObjectId
+  role  String
+  title String?
+}
+
+model invites {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model organizations {
+  id           String                  @id @default(auto()) @map("_id") @db.ObjectId
+  v            Int                     @map("__v")
+  description  String
+  employees    String[]
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  joinRequests Json?
+  name         String
+  owner        String                  @db.ObjectId
+  projects     OrganizationsProjects[]
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  supervisors  Json?
+}
+
+model projects {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @map("__v")
+  description String
+  employees   String[]
+  endDate     DateTime @db.Date
+  name        String
+  org         String   @db.ObjectId
+  phase       String
+  startDate   DateTime @db.Date
+  status      String
+  tasks       String[]
+}
+
+model tasks {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  v       Int      @map("__v")
+  name    String
+  project String[]
+}
+
+model users {
+  id            String               @id @default(auto()) @map("_id") @db.ObjectId
+  v             Int                  @map("__v")
+  email         String               @unique(map: "email_1")
+  firstName     String
+  lastName      String
+  organizations UsersOrganizations[]
+  password      String
+}

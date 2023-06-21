@@ -14,41 +14,50 @@ interface SidebarProps {
   setSidebarOpen: (arg: boolean) => void;
 }
 
-
-
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
-
   //Logic for sidebar sub menus
   //Case MUST match part of the Route.
   const location = useLocation();
   const { pathname } = location;
-  
+
   let Menu;
   let pathSegments = pathname.split("/");
-  
+
   switch (pathSegments[1]) {
-    case 'dashboard':
+    case "dashboard":
       Menu = DashboardSubMenu;
       break;
-      case 'org':
-        if (pathSegments[1] === 'org') {
-          Menu = OrgDashboardSubMenu;
-        }
-        break;
-    case 'auth':
-    case 'organization-dashboard':
-      if (pathSegments[3] === 'projects') {
+  
+    case "org":
+      if (pathSegments[1] === "org") {
+        Menu = OrgDashboardSubMenu;
+      }
+      break;
+  
+    case "organization-dashboard":
+      if (pathSegments[3] === "projects" && (pathSegments[4] === "create" || pathSegments[4] === "manage")) {
+        Menu = OrgDashboardSubMenu;
+      } else if (pathSegments[3] === "projects") {
+        Menu = ProjectSubMenu;
+      } else if (pathSegments[3] && pathSegments[4] === "teamPlanner") {
         Menu = ProjectSubMenu;
       } else {
         Menu = OrgDashboardSubMenu;
       }
       break;
+    
+    case "tasks":
+      if (pathSegments[2] && pathSegments[3] && pathSegments[4] === "taskManager") {
+        Menu = ProjectSubMenu;
+      }
+      break;
+  
     default:
-      // Menu = ProjectSubMenu 
+      // Menu = ProjectSubMenu
       Menu = () => null;
   }
   
-
+  
 
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
@@ -90,7 +99,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/">
           <p className="text-3xl">Mesh</p>
-          {/* <img src={Logo} alt="Logo" /> */}
         </NavLink>
 
         <button
@@ -106,7 +114,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       {/* <!-- SIDEBAR HEADER --> */}
 
       <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-  
         <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
           {/* <!-- Menu Group --> */}
           <div>
@@ -115,12 +122,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             </h3>
 
             {/* Add Sub Menus here */}
-          <Menu sidebarOpen={false} setSideBarOpen={function (arg: boolean): void {
-              throw new Error("Function not implemented.");
-            } } />
+            <Menu
+              sidebarOpen={false}
+              setSideBarOpen={function (arg: boolean): void {
+                throw new Error("Function not implemented.");
+              }}
+            />
           </div>
         </nav>
-     
       </div>
     </aside>
   );
